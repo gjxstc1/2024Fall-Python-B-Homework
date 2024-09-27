@@ -24,4 +24,13 @@ while True:
 
 ------
 
-## 3
+## 3 取根号（有import math）
+```python
+import math
+T = int(input())
+for _ in range(T): print(int(math.sqrt(int(input()))))
+```
+
+------
+
+## 4
