@@ -24,7 +24,7 @@ while True:
 
 ------
 
-## 3 取根号（有import math）
+## 3 取根号（有import math,也可以1/2次方）
 ```python
 import math
 T = int(input())
@@ -33,4 +33,23 @@ for _ in range(T): print(int(math.sqrt(int(input()))))
 
 ------
 
-## 4
+## 4 字符取ASCII
+```python
+
+```
+
+------
+
+## 5 结构体+排序
+```python
+
+```
+
+------
+
+## 6 线段树
+```python
+
+```
+
+------
