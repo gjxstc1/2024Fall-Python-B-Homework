@@ -271,7 +271,14 @@ int main() {
 # 7 结构体排序（按照自己定义的函数）
 ```python
 from functools import cmp_to_key
-sorted_people = sorted(people, key=cmp_to_key(cmp))
+def cmp(x, y):
+    if x + y > y + x: return 1
+    return -1 #注意这里不能写0.交换回去要写-1（也可以再补充==时是0）
+n = int(input())
+a = list(input().split())
+a = sorted(a, key = cmp_to_key(cmp), reverse = True)
+b1 = "".join(a); b2 = "".join(reversed(a))
+print("{} {}".format(b1, b2))
 ```
 ```python
 from functools import cmp_to_key
