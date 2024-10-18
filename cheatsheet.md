@@ -277,7 +277,7 @@ def cmp(x, y):
 n = int(input())
 a = list(input().split())
 a = sorted(a, key = cmp_to_key(cmp), reverse = True)
-b1 = "".join(a); b2 = "".join(reversed(a))
+b1 = "".join(a); b2 = "".join(reversed(a)) # join函数可以将list中的string按顺序连接，中间用前面的""来连接
 print("{} {}".format(b1, b2))
 ```
 ```python
@@ -300,3 +300,49 @@ people = [Person("Alice", 30, 165),Person("Bob", 25, 180),Person("Charlie", 30, 
 # Sorting using the custom comparison function
 sorted_people = sorted(people, key=cmp_to_key(compare_persons))
 ```
+
+------
+
+# 8 欧拉筛
+
+```cpp
+# include <bits/stdc++.h>
+# define f(i,a,b) for (int i = a; i <= b; i++)
+# define _f(i,a,b) for (int i = a; i >= b; i--)
+using namespace std;
+const int NR = 1e6;
+int n;
+long long a[NR + 1];
+bool isprime[NR + 1];
+int prime[NR + 1], cnt = 0;
+int phi[NR + 1], miu[NR + 1];
+
+int main() {
+    scanf("%d", &n);
+    phi[1] = 1; miu[1] = 1;
+    f(i,1,NR) isprime[i] = true;
+    isprime[0] = isprime[1] = false;
+    f(j,2,NR) {
+        if (isprime[j]) {
+            prime[++cnt] = j;
+            miu[j] = j - 1;
+            phi[j] = j - 1;
+        }
+        for (int i = 1; i <= cnt && j * prime[i] <= NR; i++) {
+            isprime[j * prime[i]] = false;
+            if (j % prime[i] == 0) {
+                miu[j * prime[i]] = 0;
+                phi[j * prime[i]] = phi[j] * prime[i];
+                break;
+            }
+            phi[j * prime[i]] = phi[j] * phi[prime[i]];
+            miu[j * prime[i]] = -miu[j];
+        }
+    }
+    return 0;
+}
+```
+
+------
+
+# 9
