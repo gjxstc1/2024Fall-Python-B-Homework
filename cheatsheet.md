@@ -325,7 +325,7 @@ int main() {
     f(j,2,NR) {
         if (isprime[j]) {
             prime[++cnt] = j;
-            miu[j] = j - 1;
+            miu[j] = -1;
             phi[j] = j - 1;
         }
         for (int i = 1; i <= cnt && j * prime[i] <= NR; i++) {
