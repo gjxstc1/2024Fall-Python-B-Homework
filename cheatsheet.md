@@ -265,3 +265,31 @@ int main() {
 ```python
 
 ```
+
+------
+
+# 7 结构体排序（按照自己定义的函数）
+```python
+from functools import cmp_to_key
+sorted_people = sorted(people, key=cmp_to_key(cmp))
+```
+```python
+from functools import cmp_to_key
+class Person:
+    def __init__(self, name, age, height):
+        self.name = name
+        self.age = age
+        self.height = height
+
+    def __repr__(self):
+        return f"Person(name={self.name}, age={self.age}, height={self.height})"
+# Custom comparison function
+def compare_persons(p1, p2):
+    if p1.age == p2.age:
+        return p1.height - p2.height  # Sort by height if ages are equal
+    return p1.age - p2.age  # Sort by age
+# List of persons
+people = [Person("Alice", 30, 165),Person("Bob", 25, 180),Person("Charlie", 30, 175),]
+# Sorting using the custom comparison function
+sorted_people = sorted(people, key=cmp_to_key(compare_persons))
+```
