@@ -260,15 +260,7 @@ int main() {
 
 ------
 
-# 6 字典
-
-```python
-
-```
-
-------
-
-# 7 结构体排序（按照自己定义的函数）
+# 7 结构体排序（按照自己定义的函数，需要import）
 ```python
 from functools import cmp_to_key
 def cmp(x, y):
@@ -345,4 +337,99 @@ int main() {
 
 ------
 
-# 9
+# 9 最长上升子序列
+
+```cpp
+# include <bits/stdc++.h>
+
+# define f(i,a,b) for (int i = a; i <= b; i++)
+# define _f(i,a,b) for (int i = a; i >= b; i--)
+using namespace std;
+int g[100001];
+int a[100001];
+
+int main() {
+    int n;
+    scanf("%d", &n);
+    int num = 0;
+    g[0] = -1e9;
+    f(i, 1, n) {
+        scanf("%d", a + i);
+        _f(j, num, 0)
+            if (a[i] > g[j]) {
+                g[j + 1] = a[i];
+                num = max(num, j + 1);
+                break;
+            }
+    }
+    printf("%d", num); // num就是最长上升子序列长度
+    return 0;
+}
+```
+
+------
+
+# 10 快速读入和输出（需import）
+
+```python
+import sys
+input = sys.stdin.read # 快读
+output = sys.stdout.write # 快写
+def solve():
+    data = input().split()
+    n = int(data[0])
+    results = []
+    for i in range(1, n + 1):
+    # 假设是简单的加法运算
+        results.append(str(int(data[2*i - 1]) + int(data[2*i])))
+    output("\n".join(results) + "\n") # 快写方式：将输出转成字符串
+solve()
+```
+
+------
+
+# 11 Exgcd
+
+```cpp
+int gcd(int a, int b, int &x, int &y) {
+	if (b == 0) {
+		x = 1;
+		y = 0;
+		return a;
+	}
+	int x1, y1, g = gcd(b, a % b, x1, y1);
+	x = y1;
+	y = x1 - a / b * y1;
+	return g;
+}
+// exgcd中，ax+by=gcd(a,b),但x、y可能有负数
+```
+
+```python
+def swap(a, b): return b, a #注意要写： x,y = swap(x, y)
+def exgcd(a, b):
+    if not b: return a, 1, 0
+    d, x, y = exgcd(b, a % b)
+    return d, y, x - a // b * y
+n, a, b, c = map(int, input().split()) # exgcd(a, b)中，ax+by=d
+d, x0, y0 = exgcd(a, b); ans = 0
+```
+
+------
+
+# 12 rstrip
+```python
+a.rstrip()只删掉末位指定字符，没指明默认空格
+```
+------
+
+# 13 整数转成字符串
+```python
+a = str(i) # i = 100, 则a = "100"
+ans = [i for i in range(n)]
+print(" ".join(map(str, ans)))
+```
+
+------
+
+# 14 
