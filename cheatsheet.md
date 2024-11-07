@@ -55,7 +55,7 @@ for i in range(t):
 
 ------
 
-## 5 结构体+排序
+## 5 结构体+排序（简单大小）
 ```python
 NR = 10000
 n, w = map(int, input().split())
@@ -260,10 +260,22 @@ int main() {
 
 ------
 
-# 7 结构体排序（按照自己定义的函数，需要import）
+## 7 结构体排序（按照自己定义的函数，需要import）（复杂大小，推荐）
 ```python
 from functools import cmp_to_key
-def cmp(x, y):
+n = int(input())
+class Node:
+    def __init__(self, c, age, pos):
+        self.c = c
+        self.age = age
+        self.pos = pos
+def cmp(x, y): # return 1 <-> 应该交换(x,y),即y应该排在x的前面
+    if x.age != y.age: return y.age - x.age
+    return x.pos - y.poss
+```
+```python
+from functools import cmp_to_key
+def cmp(x, y): # return 1 <-> 应该交换(x,y),即y应该排在x的前面
     if x + y > y + x: return 1
     return -1 #注意这里不能写0.交换回去要写-1（也可以再补充==时是0）
 n = int(input())
@@ -295,7 +307,7 @@ sorted_people = sorted(people, key=cmp_to_key(compare_persons))
 
 ------
 
-# 8 欧拉筛
+## 8 欧拉筛
 
 ```cpp
 # include <bits/stdc++.h>
@@ -337,7 +349,7 @@ int main() {
 
 ------
 
-# 9 最长上升子序列
+## 9 最长上升子序列
 
 ```cpp
 # include <bits/stdc++.h>
@@ -369,7 +381,7 @@ int main() {
 
 ------
 
-# 10 快速读入和输出（需import）
+## 10 快速读入和输出（需import）
 
 ```python
 import sys
@@ -388,7 +400,7 @@ solve()
 
 ------
 
-# 11 Exgcd
+## 11 Exgcd
 
 ```cpp
 int gcd(int a, int b, int &x, int &y) {
@@ -417,19 +429,215 @@ d, x0, y0 = exgcd(a, b); ans = 0
 
 ------
 
-# 12 rstrip
+## 12 rstrip
 ```python
 a.rstrip()只删掉末位指定字符，没指明默认空格
 ```
 ------
 
-# 13 整数转成字符串
+## 13 整数转成字符串
 ```python
 a = str(i) # i = 100, 则a = "100"
-ans = [i for i in range(n)]
-print(" ".join(map(str, ans)))
 ```
 
 ------
 
-# 14 
+## 14 单调队列(deque)-有import
+
+```cpp
+# include <cstdio>
+# include <iostream>
+# include <cmath>
+# include <algorithm>
+# include <cstring>
+# include <queue>
+# include <stack>
+# include <map>
+# include <set>
+
+# define f(i,a,b) for (int i = a; i <= b; i++)
+# define _f(i,a,b) for (int i = a; i >= b; i--)
+using namespace std;
+const int NR = 1e6;
+int n, k, x;
+
+struct Node {
+	int x, id;
+} a[NR + 1];
+deque <Node> q;
+
+int main() {
+	scanf("%d%d", &n, &k);
+	f(i,1,n) {
+		scanf("%d", &a[i].x);
+		a[i].id = i;
+	}
+	// 求最小值， dq中储存的数单调上升，每存一个数要求比前一个数大，否则前面的数会被单调队列掉
+	f(i,1,n) {
+		while (!q.empty() && q.front().id <= i - k) q.pop_front();// 窗口长度
+		while (!q.empty() && a[i].x <= q.back().x) q.pop_back();
+		q.push_back(a[i]);
+		if (i < k) continue;
+		printf("%d ", q.front().x);
+	}
+	q.clear();
+	puts(""); // 最大值
+	f(i,1,n) {
+		while (!q.empty() && q.front().id <= i - k) q.pop_front();
+		while (!q.empty() && a[i].x >= q.back().x) q.pop_back();
+		q.push_back(a[i]);
+		if (i < k) continue;
+		printf("%d ", q.front().x);
+	}
+	return 0;
+}
+```
+
+```python
+from collections import deque
+import sys
+output = sys.stdout.write
+ans = ""
+q = deque()
+n, k = map(int, input().split())
+a = list(map(int, input().split()))
+for i in range(n):
+    while q and q[0] <= i - k: q.popleft()
+    while q and a[i] <= a[q[-1]]: q.pop()
+    q.append(i)
+    if i < k - 1: continue
+    ans += str(a[q[0]]) + " "
+ans += "\n"
+q.clear()
+for i in range(n):
+    while q and q[0] <= i - k: q.popleft()
+    while q and a[i] >= a[q[-1]]: q.pop()
+    q.append(i)
+    if i < k - 1: continue
+    ans += str(a[q[0]]) + " "
+ans += "\n"
+output(ans)
+```
+
+------
+
+## 15 带反悔贪心 (priority_queue & heapq)-有import (定义结构体的"<")
+
+```cpp
+# include <bitss/stdc++.h>
+
+# define f(i,a,b) for (int i = a; i <= b; i++)
+# define _f(i,a,b) for (int i = a; i >= b; i--)
+# define ll long long
+using namespace std;
+const int NR = 2.5e5;
+int n;
+int a[NR + 1], b[NR + 1];
+bool flag[NR + 1];
+
+struct Node {
+	int x, id;
+
+	bool operator < (const Node &d) const { // 不要漏写const 
+		return x < d.x;
+	}
+};
+priority_queue <Node> q; // 默认从大到小排序
+// 从小到大：priority_queue <int, vector <int>, greater <int> > q
+int main() {
+	scanf("%d", &n);
+	f(i,1,n) scanf("%d", a + i);
+	f(i,1,n) scanf("%d", b + i);
+	ll sum = 0;
+	int cnt = 0;
+	Node tmp;
+	f(i,1,n) {
+		sum += a[i];
+		if (sum >= b[i]) sum -= b[i], flag[i] = true, q.push((Node) {b[i], i}), cnt++;
+		else if (!q.empty() && b[i] < q.top().x) {
+			tmp = q.top(); q.pop(); q.push((Node) {b[i], i});
+			sum += tmp.x - b[i];
+			flag[i] = true; flag[tmp.id] = false;
+		}
+	}
+	printf("%d\n", cnt);
+	f(i,1,n) {
+		if (flag[i]) printf("%d ", i);
+	}
+	puts("");
+	return 0;
+}
+```
+
+```python
+import heapq
+import sys
+output = sys.stdout.write
+class Node:
+    def __init__(self, x, id):
+        self.x = x
+        self.id = id
+    def __lt__(self, other): # 定义小于号！
+        return self.x > other.x
+ans = ""
+q = [] # 和列表相同，只是语法上不同; q[0]是最小值！小根堆！
+n = int(input())
+flag = [False] * n
+a = list(map(int, input().split()))
+b = list(map(int, input().split()))
+now = 0; cnt = 0
+for i in range(n):
+    now += a[i]
+    if now >= b[i]:
+        now -= b[i]
+        heapq.heappush(q, Node(b[i], i))
+        flag[i] = True
+        cnt += 1
+    elif q and b[i] < q[0].x:
+        tmp = heapq.heappop(q) # 先返回值后pop
+        flag[tmp.id] = False
+        flag[i] = True
+        now += tmp.x - b[i]
+        heapq.heappush(q, Node(b[i], i))
+ans += str(cnt) + "\n"
+ans += " ".join(map(str, [i + 1 for i in range(n) if flag[i]]))
+output(ans)
+```
+
+------
+
+## 16 字典(map,初始化用{},直接赋值)
+
+```python
+month1 =\
+    "pop, no, zip, zotz, tzec, xul, yoxkin, mol, chen, yax, zac, ceh, mac, kankin, muan, pax, koyab, cumhu".split(", ")
+month2 =\
+    "imix, ik, akbal, kan, chicchan, cimi, manik, lamat, muluk, ok, chuen, eb, ben, ix, mem, cib, caban, eznab, canac, ahau".split(", ")
+chk1 = {}
+for i in range(18): chk1[month1[i]] = i
+chk1["uayet"] = 18
+n = int(input()); print(n)
+for i in range(n):
+    x, y1, y2 = input().split()
+    day = int(y2) * 365 + chk1[y1] * 20 + int(x.rstrip('.'))
+    print("{} {} {}".format(day % 13 + 1, month2[day % 20], day // 260))
+```
+
+------
+
+## 17 enumerate(生成(i, a[i]), 第一项为q[i][0], 第二项为q[i][1])
+
+```python
+n = int(input())
+a = [(i, v) for i, v in enumerate(list(map(int, input().split())))]
+a = sorted(a, key = lambda x: x[1])
+for i, v in a: print(i + 1, end = " ")
+print()
+ans = 0
+for i, v in enumerate(a): ans += v[1] * (n - 1 - i)
+print(f"{ans / n:.2f}")
+```
+
+------
+
+## 18 
