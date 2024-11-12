@@ -353,7 +353,6 @@ int main() {
 
 ```cpp
 # include <bits/stdc++.h>
-
 # define f(i,a,b) for (int i = a; i <= b; i++)
 # define _f(i,a,b) for (int i = a; i >= b; i--)
 using namespace std;
@@ -445,15 +444,7 @@ a = str(i) # i = 100, 则a = "100"
 ## 14 单调队列(deque)-有import
 
 ```cpp
-# include <cstdio>
-# include <iostream>
-# include <cmath>
-# include <algorithm>
-# include <cstring>
-# include <queue>
-# include <stack>
-# include <map>
-# include <set>
+# include <bits/stdc++.h>
 
 # define f(i,a,b) for (int i = a; i <= b; i++)
 # define _f(i,a,b) for (int i = a; i >= b; i--)
@@ -629,7 +620,7 @@ for i in range(n):
 
 ```python
 n = int(input())
-a = [(i, v) for i, v in enumerate(list(map(int, input().split())))]
+a = enumerate(list(map(int, input().split())))
 a = sorted(a, key = lambda x: x[1])
 for i, v in a: print(i + 1, end = " ")
 print()
@@ -640,4 +631,23 @@ print(f"{ans / n:.2f}")
 
 ------
 
-## 18 
+## 18 改变递归深度限制(默认1000，有时候要调大，否则RE)
+
+```python
+import sys
+sys.setrecursionlimit(100000)
+```
+
+------
+
+## 19 字典设置初始值（避免查询key是否有定义）
+
+```python
+a = defaultdict(list) # 默认a[所有] = []
+b = defaultdict(int) # 默认a[所有] = 0
+c = defaultdict(bool) # 默认a[所有] = False
+```
+
+------
+
+## 20
