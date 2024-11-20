@@ -640,14 +640,51 @@ sys.setrecursionlimit(100000)
 
 ------
 
-## 19 字典设置初始值（避免查询key是否有定义）
+## 19 字典设置初始值（避免查询key是否有定义,有import）
 
 ```python
+from collections import defaultdict
 a = defaultdict(list) # 默认a[所有] = []
 b = defaultdict(int) # 默认a[所有] = 0
 c = defaultdict(bool) # 默认a[所有] = False
+dict.setdefault(key, default_value) # 
 ```
 
 ------
 
-## 20
+## 20 lower_bound, upper_bound, bisect二分查找(有import)
+```python
+bisect.bisect_left(a, target) = lower_bound，返回第一个数组a中>=target的位置,没有就返回len(a)；
+bisect.bisect_right(a, target) = upper_bound，返回第一个数组a中>target的位置,没有就返回len(a)
+一般也有（left,right）：bisect.bisect_right(a, x, lo=0, hi=len(a))，后两个表示数组范围
+```
+```python
+import bisect
+T = int(input())
+for ___ in range(T):
+    n, k = map(int, input().split())
+    a = list(map(int, input().split())); b = list(map(int, input().split()))
+    dp = [0] * n; mx = [0] * n # dp[i]必选i
+    dp[0] = mx[0] = b[0]
+    for i in range(1, n):
+        d = bisect.bisect_left(a, a[i] - k) - 1 # bisect.bisect_left(a, target) = lower_bound，返回第一个数组a中>=target的位置；
+        dp[i] = mx[d] + b[i] # bisect.bisect_right(a, target) = upper_bound，返回第一个数组a中>target的位置
+        mx[i] = max(mx[i - 1], dp[i])
+    print(mx[n - 1])
+```
+
+------
+
+## 21 拷贝不等于引用
+
+```python
+拷贝： a = b[:] # 两个独立的列表，对一个列表的修改不影响另一个列表时
+引用： a = b # 两个变量引用同一个列表，对一个列表的修改同时反映在另一个列表上
+```
+------
+
+## 22
+
+```python
+
+```
