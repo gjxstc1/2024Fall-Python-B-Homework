@@ -237,7 +237,7 @@ int main() {
 
 ------
 
-## 10 快速读入和输出（需import）、一次性读入
+## 10 快速读入和输出（需import）
 
 ```python
 import sys
@@ -367,7 +367,7 @@ output(ans)
 
 ------
 
-## 15 带反悔贪心 (priority_queue & heapq)-有import (定义结构体的"<")
+## 15 带反悔贪心(p_queue&heapq)-有import(定义结构体的"<")
 
 ```cpp
 # include <bitss/stdc++.h>
@@ -494,7 +494,23 @@ print(f"{ans / n:.2f}")
 ```
 ------
 
-## 22
+## 22 bfs语法
+
+```python
+while q:
+    tmp = q.popleft()
+    for nx, ny in directions:
+        tx, ty = tmp[0] + nx, tmp[1] + ny
+        if 0 <= tx < n and 0 <= ty < n and not flag[tx][ty]:
+            if a[tx][ty] == "1":
+                print(tmp[2])
+                exit(0)
+            flag[tx][ty] = True
+            q.append((tx, ty, tmp[2] + 1))
+```
+------
+
+## 23
 
 ```python
 
