@@ -1,8 +1,28 @@
+# 应 Update <mark>26
 ## 18 改变递归深度限制(默认1000，有时候要调大，否则RE)
 
 ```python
 import sys
-sys.setrecursionlimit(100000)
+sys.setrecursionlimit(1 << 30)
+```
+
+------
+
+## 16 字典(map,初始化用{},直接赋值)
+
+```python
+month1 =\
+    "pop, no, zip, zotz, tzec, xul, yoxkin, mol, chen, yax, zac, ceh, mac, kankin, muan, pax, koyab, cumhu".split(", ")
+month2 =\
+    "imix, ik, akbal, kan, chicchan, cimi, manik, lamat, muluk, ok, chuen, eb, ben, ix, mem, cib, caban, eznab, canac, ahau".split(", ")
+chk1 = {}
+for i in range(18): chk1[month1[i]] = i
+chk1["uayet"] = 18
+n = int(input()); print(n)
+for i in range(n):
+    x, y1, y2 = input().split()
+    day = int(y2) * 365 + chk1[y1] * 20 + int(x.rstrip('.'))
+    print("{} {} {}".format(day % 13 + 1, month2[day % 20], day // 260))
 ```
 
 ------
@@ -15,6 +35,7 @@ a = defaultdict(list) # 默认a[所有] = []
 b = defaultdict(int) # 默认a[所有] = 0
 c = defaultdict(bool) # 默认a[所有] = False
 dict.setdefault(key, default_value) # 
+一般的字典初值：d = {key1 : value1, key2 : value2, key3 : value3 }
 ```
 
 ------
@@ -38,6 +59,39 @@ for ___ in range(T):
         dp[i] = mx[d] + b[i] # bisect.bisect_right(a, target) = upper_bound，返回第一个数组a中>target的位置
         mx[i] = max(mx[i - 1], dp[i])
     print(mx[n - 1])
+```
+
+------
+
+## 23 自动记忆化搜索，要求只与状态有关（有import）
+```python
+from functools import lru_cache
+@lru_cache(maxsize=None)
+```
+
+------
+
+## 24 辅助栈 & split后得到list
+```python
+def main():
+    q = [] # 所有猪，stack
+    mn = [] # 每次push后的min猪，和q对应 stack
+    while True:
+        try:
+            s = input().split() # 这时s是list
+            if s[0] == "pop":
+                if q and mn: q.pop(); mn.pop()
+            if s[0] == "push":
+                x = int(s[1])
+                q.append(x)
+                if not mn: mn.append(x)
+                else: mn.append(min(mn[-1], x))
+            if s[0] == "min":
+                if q and mn: print(mn[-1])
+        except EOFError: break
+
+if __name__ == '__main__':
+    main()
 ```
 
 ------
@@ -452,24 +506,6 @@ output(ans)
 
 ------
 
-## 16 字典(map,初始化用{},直接赋值)
-
-```python
-month1 =\
-    "pop, no, zip, zotz, tzec, xul, yoxkin, mol, chen, yax, zac, ceh, mac, kankin, muan, pax, koyab, cumhu".split(", ")
-month2 =\
-    "imix, ik, akbal, kan, chicchan, cimi, manik, lamat, muluk, ok, chuen, eb, ben, ix, mem, cib, caban, eznab, canac, ahau".split(", ")
-chk1 = {}
-for i in range(18): chk1[month1[i]] = i
-chk1["uayet"] = 18
-n = int(input()); print(n)
-for i in range(n):
-    x, y1, y2 = input().split()
-    day = int(y2) * 365 + chk1[y1] * 20 + int(x.rstrip('.'))
-    print("{} {} {}".format(day % 13 + 1, month2[day % 20], day // 260))
-```
-
-------
 
 ## 17 enumerate(生成(i, a[i]), 第一项为q[i][0], 第二项为q[i][1])
 
@@ -494,9 +530,11 @@ print(f"{ans / n:.2f}")
 ```
 ------
 
-## 22 bfs语法
+## 22 bfs语法(!!popleft)
 
 ```python
+from collections import deque
+q = deque()
 while q:
     tmp = q.popleft()
     for nx, ny in directions:
@@ -509,13 +547,59 @@ while q:
             q.append((tx, ty, tmp[2] + 1))
 ```
 ------
-
-## 23
-
+## 25 找二维list的索引
 ```python
+for rowx, row in enumerate(a):
+        try:
+            coly = row.index('S')
+            sx, sy = rowx, coly
+            break
+        except ValueError: continue
+```
+------
+
+## 24 dijkstra (N+M)logN
+```cpp
+struct T {
+    int x;
+    ll dis;
+    bool operator < (const T &b) const {
+        return dis > b.dis;
+    }
+};
+priority_queue <T> q;
+void dij() {
+    memset(d, 1, sizeof(d));
+    memset(flag, false, sizeof(flag));
+    q.push((T) {s, 0});
+    d[s] = 0;
+    while (!q.empty()) {
+        int x = q.top().x; q.pop();
+        if (flag[x]) continue;
+        flag[x] = true;
+        for (int i = fe[x]; i; i = g[i].nxt) {
+            int y = g[i].to;
+            if (d[y] <= d[x] + g[i].w) continue;
+            d[y] = d[x] + g[i].w;
+            q.push((T) {y, d[y]});
+        }
+    }
+}
+
+int main() {
+    scanf("%d%d%d", &n, &m, &s);
+    f(i,1,m) {
+        int u, v, w;
+        scanf("%d%d%d", &u, &v, &w);
+        addedge(u, v, w);
+    }
+    dij();
+    f(i,1,n) printf("%lld ", d[i]);
+    return 0;
+}
+
 
 ```
-
 ------
 
 ## 6 线段树
