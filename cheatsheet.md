@@ -1,4 +1,6 @@
-# 应 Update <mark>26
+# 应 Update <mark>27
+# list指标从0开始，下标为0时再-1是回到最后一个元素！（前缀和时注意）
+# reversed(a)只返回迭代器，若返回list应该用a = list(reversed(a))
 ## 18 改变递归深度限制(默认1000，有时候要调大，否则RE)
 
 ```python
@@ -67,6 +69,53 @@ for ___ in range(T):
 ```python
 from functools import lru_cache
 @lru_cache(maxsize=None)
+```
+
+------
+
+## 7 结构体排序（按照自己定义的函数，需要import）（复杂大小，推荐）
+```python
+from functools import cmp_to_key
+n = int(input())
+class Node:
+    def __init__(self, c, age, pos):
+        self.c = c
+        self.age = age
+        self.pos = pos
+def cmp(x, y): # return 1 <-> 应该交换(x,y),即y应该排在x的前面
+    if x.age != y.age: return y.age - x.age
+    return x.pos - y.poss
+```
+```python
+from functools import cmp_to_key
+def cmp(x, y): # return 1 <-> 应该交换(x,y),即y应该排在x的前面
+    if x + y > y + x: return 1
+    return -1 #注意这里不能写0.交换回去要写-1（也可以再补充==时是0）
+n = int(input())
+a = list(input().split())
+a = sorted(a, key = cmp_to_key(cmp), reverse = True)
+b1 = "".join(a); b2 = "".join(reversed(a)) # join函数可以将list中的string按顺序连接，中间用前面的""来连接
+print("{} {}".format(b1, b2))
+```
+```python
+from functools import cmp_to_key
+class Person:
+    def __init__(self, name, age, height):
+        self.name = name
+        self.age = age
+        self.height = height
+
+    def __repr__(self):
+        return f"Person(name={self.name}, age={self.age}, height={self.height})"
+# Custom comparison function
+def compare_persons(p1, p2):
+    if p1.age == p2.age:
+        return p1.height - p2.height  # Sort by height if ages are equal
+    return p1.age - p2.age  # Sort by age
+# List of persons
+people = [Person("Alice", 30, 165),Person("Bob", 25, 180),Person("Charlie", 30, 175),]
+# Sorting using the custom comparison function
+sorted_people = sorted(people, key=cmp_to_key(compare_persons))
 ```
 
 ------
@@ -148,72 +197,7 @@ for i in range(t):
         if x <= 64:
             x = x + 90 - 64
     print(chr(x), end = "") #整数转字符
-""" "1"-49, A 65-90, 97-122"""
-```
-
-------
-
-## 5 结构体+排序（简单大小）
-```python
-NR = 10000
-n, w = map(int, input().split())
-class Node:
-    def __init__(self, value, weight, ratio):
-        self.ratio = ratio
-        self.value = value
-        self.weight = weight
-a = []
-for i in range(n):
-    x, y = map(int, input().split())
-    a.append(Node(x, y, x / y))
-a = sorted(a, key=lambda _: _.ratio, reverse = True)
-```
-
-------
-
-## 7 结构体排序（按照自己定义的函数，需要import）（复杂大小，推荐）
-```python
-from functools import cmp_to_key
-n = int(input())
-class Node:
-    def __init__(self, c, age, pos):
-        self.c = c
-        self.age = age
-        self.pos = pos
-def cmp(x, y): # return 1 <-> 应该交换(x,y),即y应该排在x的前面
-    if x.age != y.age: return y.age - x.age
-    return x.pos - y.poss
-```
-```python
-from functools import cmp_to_key
-def cmp(x, y): # return 1 <-> 应该交换(x,y),即y应该排在x的前面
-    if x + y > y + x: return 1
-    return -1 #注意这里不能写0.交换回去要写-1（也可以再补充==时是0）
-n = int(input())
-a = list(input().split())
-a = sorted(a, key = cmp_to_key(cmp), reverse = True)
-b1 = "".join(a); b2 = "".join(reversed(a)) # join函数可以将list中的string按顺序连接，中间用前面的""来连接
-print("{} {}".format(b1, b2))
-```
-```python
-from functools import cmp_to_key
-class Person:
-    def __init__(self, name, age, height):
-        self.name = name
-        self.age = age
-        self.height = height
-
-    def __repr__(self):
-        return f"Person(name={self.name}, age={self.age}, height={self.height})"
-# Custom comparison function
-def compare_persons(p1, p2):
-    if p1.age == p2.age:
-        return p1.height - p2.height  # Sort by height if ages are equal
-    return p1.age - p2.age  # Sort by age
-# List of persons
-people = [Person("Alice", 30, 165),Person("Bob", 25, 180),Person("Charlie", 30, 175),]
-# Sorting using the custom comparison function
-sorted_people = sorted(people, key=cmp_to_key(compare_persons))
+""" "1" 49, "A" 65-90, "a" 97-122"""
 ```
 
 ------
@@ -260,6 +244,24 @@ int main() {
 
 ------
 
+## 5 结构体+排序（简单大小）
+```python
+NR = 10000
+n, w = map(int, input().split())
+class Node:
+    def __init__(self, value, weight, ratio):
+        self.ratio = ratio
+        self.value = value
+        self.weight = weight
+a = []
+for i in range(n):
+    x, y = map(int, input().split())
+    a.append(Node(x, y, x / y))
+a = sorted(a, key=lambda _: _.ratio, reverse = True)
+```
+
+------
+
 ## 9 最长上升子序列
 
 ```cpp
@@ -291,7 +293,7 @@ int main() {
 
 ------
 
-## 10 快速读入和输出（需import）
+## 10 一次性读入和输出（需import）
 
 ```python
 import sys
@@ -597,9 +599,19 @@ int main() {
     f(i,1,n) printf("%lld ", d[i]);
     return 0;
 }
-
-
 ```
+
+------
+
+# 26 product (有import，生成笛卡尔积$A^B$)
+```python
+from itertools import product
+a = [list(map(int, input().split())) for _ in range(5)]
+movement = [[0] * 6 for _ in range(5)]
+for tmp in product(range(2), repeat = 6):
+    movement[0] = list(tmp)
+```
+
 ------
 
 ## 6 线段树
