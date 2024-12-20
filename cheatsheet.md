@@ -1,6 +1,7 @@
-# 应 Update <mark>27
+# 应 Update <mark>28
 # list指标从0开始，下标为0时再-1是回到最后一个元素！（前缀和时注意）
 # reversed(a)只返回迭代器，若返回list应该用a = list(reversed(a))
+# 
 ## 18 改变递归深度限制(默认1000，有时候要调大，否则RE)
 
 ```python
@@ -36,7 +37,7 @@ from collections import defaultdict
 a = defaultdict(list) # 默认a[所有] = []
 b = defaultdict(int) # 默认a[所有] = 0
 c = defaultdict(bool) # 默认a[所有] = False
-dict.setdefault(key, default_value) # 
+dict.setdefault(key, default_value)
 一般的字典初值：d = {key1 : value1, key2 : value2, key3 : value3 }
 ```
 
@@ -201,6 +202,58 @@ for i in range(t):
 ```
 
 ------
+## 25 找二维list的索引
+```python
+for rowx, row in enumerate(a):
+        try:
+            coly = row.index('S')
+            sx, sy = rowx, coly
+            break
+        except ValueError: continue
+```
+
+------
+
+## 28 set
+
+```python
+n, m = map(int, input().split())
+a = list(map(int, input().split()))
+s = set() # 初始化
+num = 1
+for x in a:
+    s.add(x) # add添加元素，已存在则无事
+    if len(s) == m: # O(1)查找len
+        num += 1
+        s.clear()
+print(num)
+# 初始化也可以用：a = {1, 2, 3};也可以 a = set([1, 2, 4])
+```
+```python
+判断元素是否在集合中存在： x in s
+>>> thisset = set(("Google", "Runoob", "Taobao"))
+>>> "Runoob" in thisset
+True
+>>> "Facebook" in thisset
+False
+>>> 
+删除元素（要求存在）：s.remove(x)
+集合的交并补：
+>>> a = set('abracadabra')
+>>> b = set('alacazam')
+>>> a                                  
+{'a', 'r', 'b', 'c', 'd'}
+>>> a - b # 集合a中包含而集合b中不包含的元素
+{'r', 'd', 'b'}
+>>> a | b 并集# 集合a或b中包含的所有元素
+{'a', 'c', 'r', 'd', 'b', 'm', 'z', 'l'}
+>>> a & b 交集# 集合a和b中都包含了的元素
+{'a', 'c'}
+>>> a ^ b 对称差# 不同时包含于a和b的元素
+{'r', 'd', 'b', 'm', 'z', 'l'}
+```
+------
+
 
 ## 8 欧拉筛
 
@@ -340,6 +393,30 @@ d, x0, y0 = exgcd(a, b); ans = 0
 
 ------
 
+## 27 逆序对数（归并排序）
+```python
+n = int(input())
+ans = 0
+a = list(map(int, input().split()))
+
+def g(L, R):
+    global ans
+    if L == R: return [a[L]]
+    mid = (L + R) >> 1
+    b = g(L, mid) + [float("inf")]; c = g(mid + 1, R) + [float("inf")]
+    l, r = 0, 0
+    d = []
+    while l <= mid - L or r <= R - mid - 1:
+        if b[l] < c[r]: d.append(b[l]); l += 1
+        else: d.append(c[r]); r += 1; ans += mid - L - l + 1
+    return d
+
+g(0, n - 1)
+print(ans)
+```
+
+------
+
 ## 12 rstrip
 ```python
 a.rstrip()只删掉末位指定字符，没指明默认空格
@@ -394,7 +471,6 @@ int main() {
 	return 0;
 }
 ```
-
 ```python
 from collections import deque
 import sys
@@ -548,16 +624,7 @@ while q:
             flag[tx][ty] = True
             q.append((tx, ty, tmp[2] + 1))
 ```
-------
-## 25 找二维list的索引
-```python
-for rowx, row in enumerate(a):
-        try:
-            coly = row.index('S')
-            sx, sy = rowx, coly
-            break
-        except ValueError: continue
-```
+
 ------
 
 ## 24 dijkstra (N+M)logN
