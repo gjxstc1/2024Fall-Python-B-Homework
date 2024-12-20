@@ -681,7 +681,8 @@ int main() {
 
 ------
 
-# 26 product (有import，生成笛卡尔积$A^B$)
+## 26 product (有import，生成笛卡尔积$A^B$)
+
 ```python
 from itertools import product
 a = [list(map(int, input().split())) for _ in range(5)]
