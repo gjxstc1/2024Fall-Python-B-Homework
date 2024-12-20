@@ -1,7 +1,18 @@
-# 应 Update <mark>28
 # list指标从0开始，下标为0时再-1是回到最后一个元素！（前缀和时注意）
 # reversed(a)只返回迭代器，若返回list应该用a = list(reversed(a))
-# 
+# 在dfs时如果要用global，要写dfs前面声明这个变量（否则CE）：
+```python
+n = int(input())
+ans = 0 # 先声明要global的变量再写dfs
+a = list(map(int, input().split()))
+def g(L, R):
+    global ans
+    ...
+    return d
+g(0, n - 1)
+print(ans)
+```
+
 ## 18 改变递归深度限制(默认1000，有时候要调大，否则RE)
 
 ```python
