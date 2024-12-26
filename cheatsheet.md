@@ -692,6 +692,296 @@ for tmp in product(range(2), repeat = 6):
 ```
 
 ------
+### 29 哈希表
+
+求得一个数组最长的和为0的连续子序列的方法（实例为求最长平均值为a的字串）
+
+```python
+def longest_subarray_with_avg(arr, a):
+    # 步骤 1: 将每个元素减去a
+    diff = [x - a for x in arr]
+    # 步骤 2: 使用哈希表存储前缀和
+    prefix_sum = 0
+    prefix_map = {0: -1}  # 前缀和为0时，起始索引为-1
+    max_len = 0
+    start_index = -1
+    # 步骤 3: 遍历数组并计算前缀和
+    for i in range(len(diff)):
+        prefix_sum += diff[i]
+        # 步骤 4: 如果前缀和已经出现过，计算子数组的长度
+        if prefix_sum in prefix_map:
+            length = i - prefix_map[prefix_sum]
+            if length > max_len:
+                max_len = length
+                start_index = prefix_map[prefix_sum] + 1
+        else:
+            prefix_map[prefix_sum] = i
+    # 返回最长子数组
+    if max_len > 0:
+        return arr[start_index:start_index + max_len]
+    else:
+        return []
+```
+
+------
+
+## 30 字符串互相转化
+
+```python
+upper()：将字符串中的所有小写字母转换为大写。
+lower()：将字符串中的所有大写字母转换为小写。
+swapcase()：将字符串中的所有大写字母转换为小写，同时将所有小写字母转换为大写。
+# 定义一个包含大小写字母的字符串
+text = "Hello, World!"
+# 使用 upper() 方法将所有字母转为大写
+upper_text = text.upper()
+print(f"Upper case: {upper_text}")
+# 使用 lower() 方法将所有字母转为小写
+lower_text = text.lower()
+print(f"Lower case: {lower_text}")
+# 使用 swapcase() 方法将所有字母的大小写互换
+swapped_text = text.swapcase()
+print(f"Swapped case: {swapped_text}")
+```
+
+------
+
+## 31 defaultdict
+
+* 这是一种"如果访问的key不存在与字典中,就给它新建一个默认值`dict[key]=default_value`的字典
+
+  ```python
+  from collections import defaultdict
+  a=defaultdict(list)#以空列表为默认值的defaultdict
+  #类似地,括号里是int,set也可以
+  ```
+
+* 如果要自定义默认值,用`defaultdict(lambda: XXXX)`
+
+### 32 双端队列(deque)
+
+* 可以从两端弹出元素,但弹出中间元素会很慢
+
+  ```python
+  from collections import deque
+  deque.popleft(item)#左弹出
+  deque.pop(item)#右弹出
+  deque.appendleft(item)#左加入
+  deque.append(item)#右加入
+  ```
+
+### 33 小顶堆(heapq)
+
+* 这是用一个列表实现小顶堆的数据结构.小顶堆是一种儿茶素(x)(二叉树),**根节点最小,每一个节点都比它的孩子小.**
+
+* 你可以先建立一个列表,然后对它做堆操作,这样它就被你当成了一个堆
+
+* (python没有大顶堆数据结构,想要做大顶堆可以把heapq里面所有元素加负号)
+
+  ```python
+  import heapq
+  heap=[6,5,4,3,2,1]#注意现在它还只是一个普通的列表
+  ```
+
+* 如果它的元素并不是以堆的形式排列的,就给它"堆化":`heapq.heapify(heap)`
+
+* 堆化后的a应为`[1,2,4,3,5,6]`(以堆的形式排列的方式显然不止一种)
+
+* 然后可以对堆进行堆操作:
+
+  ```python
+  import heapq
+  heapq.heappush(heap, item)#推入元素
+  heapq.heappop(heap)#弹出堆顶
+  heapq.heappushpop(heap,item)#先推再弹,更高效
+  heapq.heapreplace(heap,item)#先弹再推(SN1)(bushi)
+  ```
+
+* 弹出和推入都是O(log n)
+
+### 34 列表（deepcopy复制二维数组！）
+
+* 构建二维列表:`[[],[],...]`(就是列表套列表)
+
+* 清空:`l.clear()`,O(1)
+
+* 切片:`l[a:b]`,**O(b-a)**,不是O(1)!
+
+* 反转:`l.reverse()`,O(n)
+
+* **浅拷贝问题**:当列表等被拷贝时,拷贝的是列表的地址而不是列表本身
+
+  ```python
+  a=[1,2,3]
+  b=a
+  ```
+
+  此时a,b共用一个地址,其中任何一个被改变时,另一个也会相应改变.
+  这称为"浅拷贝".(如果你知道FL Studio...这就相当于FL Studio里面复制一个pattern)
+
+  与之相反的叫深拷贝,拷贝的是列表本身(相当于复制了pattern然后make unique)
+
+  ```python
+  from copy import deepcopy
+  a=[1,2,3]
+  b=a[:]
+  c=[[1,2],[2,3],[3,4]]
+  d=c[:]
+  e=deepcopy(c)
+  ```
+
+  对于一维列表,用切片复制就可以实现深拷贝, `l.copy()`与之是等价的.
+  对于>=2维的列表,如果用切片或者`l.copy()`,那里面那些小列表还是浅拷贝的.如果要完全深拷贝自身,需要用deepcopy函数
+
+* 列表化:`list(x)`,时间复杂度取决于遍历x的长度.其中x可以是以下:
+
+  * 字符串:`list('abc')==['a','b','c']`
+  * 迭代器/生成器(range啊map啊这类的):
+    * `list(range(4))==[0,1,2,3]`
+    * `list(map(int,input().split())==[2,5,1]`(假设输入'2 5 1')
+    * `list(enumerate([2,5,1]))==[(0,2),(1,5),(2,1)]`
+
+### 35 集合(无重复的元素,自动去重)
+
+* **集合内的元素只能是"零维的"标量.**
+* 添加:`s.add(x)`
+* 查询:`x (not) in s`,**O(1)**
+* 删除:
+  * `s.discard(x)`,**O(1)**:删除x,如果没找到x就无事发生
+* 弹出:`s.pop()`,O(1):随弹出一项
+* 清空:`s.clear()`,O(1)
+* 集合运算:
+  * 并:`a|b`,O(len(a)+len(b))
+  * 交:`a&b`,O(len(a)+len(b))
+  * 差:
+    * `a-b`,O(len(a)+len(b)),注意这是表示∈a且∉b的元素的集合,
+      如`{1}-{1,2}==set(),{1,2}-{1}=={2}`
+    * `a^b`,对称差,等于a|b-a&b
+  * `a>=b,a>b,a<=b,a<b`,O(len(小的那个))表示集合的包含关系,如果既不是子集也不是超集也返回False
+* 构建集合:
+  * 空集:`a=set()`
+  * 集合化:set(x),x是列表\元组\字典(a是字典则会返回所有键组成的集合)
+
+### 36 字典
+
+* **字典的键只能是"零维"标量(int,float这种),而非"一维"以上的复合数据类型.**
+* 删除:`del d[key]`
+* 弹出:
+  * `d.pop(key)`,O(1)
+* 获取:`d.get(key,dft)`可以在key不在字典时返回默认值dft
+* 清空:`d.clear()`,O(1)
+* 键or值们:`d.keys()`,`d.values()`,O(1).
+
+### 37 迭代器和生成器
+
+* range就是一种迭代器,它在迭代时,每次生成一个量.
+* **可以被列表/元组/字典/集合化.**
+* python中常用的迭代器/生成器有以下几种:
+  * `range(n)`:生成0,1,...,(n-1)的整数序列
+  * `enumerate(list)`:依次生成列表/元组中每一项索引与元素的对应:
+    * `list(enumerate(['a','b','c']))=[(0,'a'),(1,'b'),(2,'c')]`
+    * `dict(enumerate(['a','b','c']))={0:'a',1:'b',2:'c'}`
+  * `zip(a,b)`:依次生成列表/元组a,b中每一项的对应.如果有一方有多余项,则不管
+    * `list(zip([1,2,3],[11,22]))=[(1,11),(2,22)]`
+    * `dict`类似
+
+    ### 38 next_permutation:
+
+1）从后往前找第一组相邻的升序数对，记录左边的位置p。 2）从后往前找第一个比p位置的数大的数，将两个数交换。 3）把p位置后所有数字逆序。
+
+```python
+def next_permutation(b):
+    pos1 = n - 2
+    while pos1 >= 0 and b[pos1] >= b[pos1 + 1]: pos1 -= 1
+    if pos1 == -1: return [i + 1 for i in range(n)]
+    pos2 = n - 1
+    while pos2 >= 0 and b[pos2] <= b[pos1]: pos2 -= 1
+    b[pos2], b[pos1] = b[pos1], b[pos2]
+    b[pos1 + 1:] = sorted(b[pos1 + 1:])
+    return b
+T = int(input())
+for ___ in range(T):
+    n, k = map(int, input().split())
+    a = list(map(int, input().split()))
+    for i in range(k): a = next_permutation(a)
+    print(*a)
+```
+
+```cpp
+int T, n, k;
+int a[NR + 1];
+int main() {
+	scanf("%d", &T);
+	while (T --) {
+		scanf("%d%d", &n, &k);
+		f(i,1,n) scanf("%d", a + i);
+		f(i,1,k) next_permutation(a + 1, a + n + 1); // n,n-1,...,1下一个是1,2,...n
+		f(i,1,n) printf("%d ", a[i]);
+		puts("");
+	}
+	return 0;
+}
+
+```
+
+------
+
+## 39 取整(有import)
+
+```python
+import math
+print(math.ceil(4.2)) # 5
+print(math.floor(4.2)) # 4
+```
+
+------
+
+## 40 二维数组拷贝(有import)
+
+```python
+import copy
+original = [1, 2, [3, 4]]
+copied = copy.deepcopy(original)
+print(copied) # [1, 2, [3, 4]]
+```
+
+------
+
+## 41 Dijkstra - 走山路
+
+```python
+from collections import deque
+import heapq
+def solve(sx, sy, ex, ey):
+    q = []
+    if a[sx][sy] == '#' or a[ex][ey] == '#':
+        print("NO")
+        return
+    flag = [[False] * m for _ in range(n)] # 是否 in q
+    d = [[float('inf')] * m for _ in range(n)]
+    heapq.heappush(q, (0, sx, sy))
+    d[sx][sy] = 0
+    while q:
+        dist, x, y = heapq.heappop(q)
+        if x == ex and y == ey: break
+        if flag[x][y]: continue
+        flag[x][y] = True
+        for nx, ny in directions:
+            tx, ty = x + nx, y + ny
+            if 0 <= tx < n and 0 <= ty < m and a[tx][ty] != "#":
+                if abs(int(a[x][y]) - int(a[tx][ty])) + dist >= d[tx][ty]: continue
+                d[tx][ty] = abs(int(a[x][y]) - int(a[tx][ty])) + dist
+                heapq.heappush(q, (d[tx][ty], tx, ty))
+    print("NO" if d[ex][ey] == float('inf') else d[ex][ey])
+
+directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]
+n, m, T = map(int, input().split())
+a = [input().split() for __ in range(n)]
+for __ in range(T):
+    startx, starty, endx, endy = map(int, input().split())
+    solve(startx, starty, endx, endy)
+```
+------
 
 ## 6 线段树
 ```python
